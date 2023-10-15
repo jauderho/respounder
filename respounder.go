@@ -1,7 +1,7 @@
 package main
 
 import (
-	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"flag"
@@ -201,10 +201,10 @@ func sendLLMNRProbe(ip net.IP) string {
 }
 
 // Calculate random hostname by taking random length
-// of the SHA1 of current time.
+// of the SHA256 of current time.
 func randomHostname() string {
 	currentTime := time.Now().Format("2006-01-02 15:04:05")
-	h := sha1.New()
+	h := sha256.New()
 	h.Write([]byte(currentTime))
 	bs := h.Sum(nil)
 	randomSlice := bs[:(rand.Intn(len(bs)-3) + 3)]
@@ -240,7 +240,7 @@ func initFlags() {
 	}
 	if *debugPtr {
 		f, err := os.OpenFile("debug.log",
-			os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+			os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 		if err != nil {
 			panic(err)
 		}
